@@ -53,34 +53,48 @@ class HomeView extends StatelessWidget {
             ],
           ),
           body: SizedBox(
-            height: 450,
+            height: 140,
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
-              itemCount: 6,
+              itemCount: freeBook.length,
               itemBuilder: (context, index) {
                 String imageUrl =
                     '$coreUrl${freeBook[index]!.imageNameF ?? 'No image'}';
-                return Column(
-                  children: [
-                    Image.network(
-                      imageUrl,
-                      loadingBuilder: (context, child, loadingProgress) {
-                        if (loadingProgress == null) {
-                          return child;
-                        }
-                        return const CircularProgressIndicator();
-                      },
-                      errorBuilder: (context, error, stackTrace) {
-                        // Display an error message or placeholder image
-                        return const Text('Error loading image');
-                      },
-                    ),
-                  ],
+                return Card(
+                  child: Column(
+                    //mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Expanded(
+                        child: AspectRatio(
+                          aspectRatio: 2 / 3,
+                          child: ClipRect(
+                            //clipper: RoundedCornerClipper(20.0),
+                            child: Image.network(
+                              imageUrl,
+                              fit: BoxFit.cover,
+                              width: 150,
+                              loadingBuilder:
+                                  (context, child, loadingProgress) {
+                                if (loadingProgress == null) {
+                                  return child;
+                                }
+                                return const CircularProgressIndicator();
+                              },
+                              errorBuilder: (context, error, stackTrace) {
+                                // Display an error message or placeholder image
+                                return const Text('Error loading image');
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 );
               },
               separatorBuilder: (BuildContext context, int index) {
                 return const SizedBox(
-                  width: 12,
+                  width: 15,
                 );
               },
             ),
