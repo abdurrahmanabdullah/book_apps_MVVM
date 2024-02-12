@@ -1,5 +1,7 @@
 import 'package:book_apps_mvvm/core/models/book_model.dart';
 import 'package:book_apps_mvvm/core/view_models/book_view_model.dart';
+import 'package:book_apps_mvvm/ui/route_navigation.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
@@ -84,7 +86,7 @@ class HomeView extends StatelessWidget {
         var allBookInfo = allBookInfoList.join('\n');
 
 // Print the combined information
-        print(allBookInfoList.length);
+        // print(allBookInfoList.length);
 
         return Scaffold(
             appBar: AppBar(
@@ -127,6 +129,7 @@ class HomeView extends StatelessWidget {
                     const Divider(),
                     SizedBox(
                       height: 256,
+
                       child: ListView.separated(
                         padding: const EdgeInsets.all(16),
                         scrollDirection: Axis.horizontal,
@@ -137,6 +140,7 @@ class HomeView extends StatelessWidget {
                           String name = freeBook[index]!.name ?? 'unknown';
                           return SizedBox(
                             width: 150,
+                            // height: 150,
                             child: Column(
                               children: [
                                 Expanded(
@@ -144,29 +148,35 @@ class HomeView extends StatelessWidget {
                                   aspectRatio: 4 / 3,
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(20),
-                                    child: Image.network(
-                                      freeimageUrl,
-                                      fit: BoxFit.cover,
-                                      loadingBuilder:
-                                          (context, child, loadingProgress) {
-                                        if (loadingProgress == null) {
-                                          return child;
-                                        }
-                                        return const CircularProgressIndicator();
+                                    child: InkWell(
+                                      onTap: () {
+                                        Navigator.pushNamed(
+                                            context, RouteNavigation.freeBook);
                                       },
-                                      errorBuilder:
-                                          (context, error, stackTrace) {
-                                        // Display an error message or placeholder image
-                                        return const Text(
-                                            'Error loading image');
-                                      },
+                                      child: Image.network(
+                                        freeimageUrl,
+                                        fit: BoxFit.cover,
+                                        loadingBuilder:
+                                            (context, child, loadingProgress) {
+                                          if (loadingProgress == null) {
+                                            return child;
+                                          }
+                                          return const CircularProgressIndicator();
+                                        },
+                                        errorBuilder:
+                                            (context, error, stackTrace) {
+                                          // Display an error message or placeholder image
+                                          return const Text(
+                                              'Error loading image');
+                                        },
+                                      ),
                                     ),
                                   ),
                                 )),
                                 const SizedBox(
                                   height: 5,
                                 ),
-                                Text(getFirstThreeWord(name))
+                                Text('${getFirstThreeWord(name)}...')
                               ],
                             ),
                           );
@@ -324,10 +334,10 @@ class HomeView extends StatelessWidget {
                             ratedImageUrl =
                                 '$coreUrl${book.imageNameF ?? 'No image'}';
 
-                            print(ratedImageUrl);
+                            //  print(ratedImageUrl);
                           }
                           //    print(allBook[index].imageNameF);
-                          print(ratedImageUrl);
+                          //print(ratedImageUrl);
 
                           String name = premiumBook[index]!.name ?? 'unknown';
                           return SizedBox(
@@ -396,14 +406,27 @@ class HomeView extends StatelessWidget {
                   ],
                 ),
               ),
-            ));
+            ),
+            backgroundColor: Colors.white,
+            bottomNavigationBar:
+                CurvedNavigationBar(backgroundColor: Colors.amber, items: [
+              const Icon(Icons.home),
+              // Icon(Icons.favorite),
+              const Icon(Icons.category),
+              InkWell(
+                  onTap: () {
+                    Navigator.pushNamed(
+                        context, RouteNavigation.authentication);
+                  },
+                  child: const Icon(Icons.account_circle_rounded)),
+            ]));
       },
     );
   }
 
   String getFirstThreeWord(String text) {
     List<String> words = text.split(' ');
-    int numWordsToShow = 3;
+    int numWordsToShow = 2;
     if (words.length > numWordsToShow) {
       return words.sublist(0, numWordsToShow).join(' ');
     } else {
